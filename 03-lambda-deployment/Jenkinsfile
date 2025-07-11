@@ -9,8 +9,8 @@ pipeline {
                     pip3 install -r 03-lambda-deployment/lambda-app/tests/requirements.txt
                     wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
                     unzip -o aws-sam-cli-linux-x86_64.zip -d sam-installation
-                    ./sam-installation/install --update -i ~/.aws-sam-cli
-                    export PATH=$PATH:~/.aws-sam-cli/bin
+                    ./sam-installation/install --update -i /var/lib/jenkins/.aws-sam-cli
+                    export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
                 '''
             }
         }
@@ -24,11 +24,11 @@ pipeline {
                 '''
              }
         }
-        stage('Build') {
+     stage('Build') {
             steps {
                 sh '''
                     . venv/bin/activate
-                    export PATH=$PATH:~/.aws-sam-cli/bin
+                    export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
                     sam build -t 03-lambda-deployment/lambda-app/template.yaml
                 '''
             }
