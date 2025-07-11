@@ -1,9 +1,6 @@
 pipeline {
     agent any
-
-    
     stages {
-
         stage('Setup') {
             steps {
                 sh '''
@@ -11,35 +8,30 @@ pipeline {
                     . venv/bin/activate
                     pip3 install -r 03-lambda-deployment/lambda-app/tests/requirements.txt
                 '''
-                }
+            }
         }
         stage('Test') {
             steps {
-                    sh '''
+                sh '''
                     . venv/bin/activate
-                    pytest
-                    '''
-                }
+                    cd 03-lambda-deployment/lambda-app/tests
+                    python -m pytest .
+                '''
+             }
         }
-
         stage('Build') {
             steps {
-                sh "sam build -t lambda-app/template.yaml"
-
+                sh "sam build -t 03-lambda-deployment/lambda-app/template.yaml"
             }
         }
         stage('Deploy') {
-
             environment {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key')
                 AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
             }
-            
             steps {
-                sh "sam deploy -t lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
-
+                sh "sam deploy -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
             }
         }
-      
     }
 }
