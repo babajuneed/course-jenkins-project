@@ -39,7 +39,10 @@ pipeline {
                 AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
             }
             steps {
-                sh "sam deploy -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
+                sh '''
+                    export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
+                    sam deploy -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset
+                '''
             }
         }
     }
