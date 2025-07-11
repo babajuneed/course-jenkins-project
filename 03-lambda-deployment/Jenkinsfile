@@ -26,7 +26,11 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh "sam build -t 03-lambda-deployment/lambda-app/template.yaml"
+                sh '''
+                    . venv/bin/activate
+                    export PATH=$PATH:~/.aws-sam-cli/bin
+                    sam build -t 03-lambda-deployment/lambda-app/template.yaml
+                '''
             }
         }
         stage('Deploy') {
