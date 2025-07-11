@@ -41,7 +41,7 @@ pipeline {
             steps {
                 sh '''
                     export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
-                    sam deploy --region ap-south-1 --s3-bucket lambdatest3398 -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset
+                    sam deploy --region ap-south-1 --s3-bucket lambdatest3398 --capabilities CAPABILITY_IAM -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset
                 '''
             }
         }
