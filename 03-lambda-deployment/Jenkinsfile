@@ -1,38 +1,49 @@
 pipeline {
     agent any
-
-    
     stages {
-
         stage('Setup') {
             steps {
-                sh "pip3 install -r lambda-app/tests/requirements.txt"
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip3 install -r 03-lambda-deployment/lambda-app/tests/requirements.txt
+                    wget https://github.com/aws/aws-sam-cli/releases/latest/download/aws-sam-cli-linux-x86_64.zip
+                    unzip -o aws-sam-cli-linux-x86_64.zip -d sam-installation
+                    ./sam-installation/install --update -i /var/lib/jenkins/.aws-sam-cli
+                    export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
+                '''
             }
         }
+
         stage('Test') {
             steps {
-                sh "pytest"
-            }
+                sh '''
+                    . venv/bin/activate
+                    cd 03-lambda-deployment/lambda-app/tests
+                    python -m pytest .
+                '''
+             }
         }
-
-        stage('Build') {
+     stage('Build') {
             steps {
-                sh "sam build -t lambda-app/template.yaml"
-
+                sh '''
+                    . venv/bin/activate
+                    export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
+                    sam build -t 03-lambda-deployment/lambda-app/template.yaml
+                '''
             }
         }
         stage('Deploy') {
-
             environment {
                 AWS_ACCESS_KEY_ID = credentials('aws-access-key')
                 AWS_SECRET_ACCESS_KEY = credentials('aws-secret-key')
             }
-            
             steps {
-                sh "sam deploy -t lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset"
-
+                sh '''
+                    export PATH=$PATH:/var/lib/jenkins/.aws-sam-cli/current/bin
+                    sam deploy -t 03-lambda-deployment/lambda-app/template.yaml --no-confirm-changeset --no-fail-on-empty-changeset
+                '''
             }
         }
-      
     }
 }

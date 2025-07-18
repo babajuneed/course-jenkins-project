@@ -1,8 +1,6 @@
 version = 0.1
 [default.deploy.parameters]
 stack_name = "lambda-app"
-resolve_s3 = true
-s3_prefix = "lambda-app"
-region = "us-east-1"
+s3_bucket = "lambdatest3398"
+region = "ap-south-1"
 capabilities = "CAPABILITY_IAM"
-image_repositories = []
