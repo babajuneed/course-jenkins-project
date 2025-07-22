@@ -12,6 +12,7 @@ pipeline {
 
         stage('Setup') {
             steps {
+		echo "i am in right file"
                 sh "pip install -r requirements.txt"
             }
         }
