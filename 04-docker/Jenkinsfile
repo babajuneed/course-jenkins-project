@@ -13,7 +13,7 @@ pipeline {
         stage('Setup') {
             steps {
 		echo "i am in right file"
-                sh "pip install --break-system-packages -r requirements.txt"
+                sh "pip install --break-system-packages -r 04-docker/requirements.txt"
             }
         }
         stage('Test') {
