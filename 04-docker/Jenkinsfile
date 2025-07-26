@@ -1,7 +1,4 @@
 pipeline {
-    triggers {
-        scm poll: true, changelog: true, paths: '04-docker/**'
-    }
     agent any
 
     environment {
