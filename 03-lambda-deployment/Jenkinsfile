@@ -1,4 +1,9 @@
 pipeline {
+    pipeline {
+      triggers {
+        scm poll: true, changelog: true, paths: '03-lambda-deployment/**'
+      }
+   } 
     agent any
     stages {
         stage('Setup') {
